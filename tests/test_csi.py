@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from csi import csi, find_nearest, calculate_mapping
+from csi import csi, find_nearest, calculate_mapping, calculate_shared_points
 
 
 class FindNearestTest(TestCase):
@@ -44,6 +44,23 @@ class CalculateMappingTest(TestCase):
             (0, 2): (0, 1),
             (0, 3): (0, 1),
         })
+
+
+class SharedPointsTest(TestCase):
+    def test_calculate_shared_points_none(self):
+        cluster1 = [(0, 0), (1, 1)]
+        cluster2 = [(2, 2), (3, 3)]
+        self.assertEqual(0, calculate_shared_points(cluster1, cluster2))
+
+    def test_calculate_shared_points_some(self):
+        cluster1 = [(0, 0), (1, 1)]
+        cluster2 = [(2, 2), (0, 0)]
+        self.assertEqual(1, calculate_shared_points(cluster1, cluster2))
+
+    def test_calculate_shared_points_all(self):
+        cluster1 = [(0, 0), (1, 1)]
+        cluster2 = [(1, 1), (0, 0)]
+        self.assertEqual(2, calculate_shared_points(cluster1, cluster2))
 
 
 class CsiTest(TestCase):
