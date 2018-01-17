@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from csi import csi, find_nearest, calculate_mapping, calculate_shared_points
+from csi import csi, find_nearest, calculate_mapping, calculate_num_shared_points, calculate_num_points_in_solution
 
 
 class FindNearestTest(TestCase):
@@ -46,21 +46,42 @@ class CalculateMappingTest(TestCase):
         })
 
 
+class SolutionPointsTest(TestCase):
+    def test_calculate_num_points_in_empty_solution(self):
+        self.assertEqual(0, calculate_num_points_in_solution({}))
+
+    def test_calculate_num_points_in_solution_single_cluster(self):
+        self.assertEqual(1, calculate_num_points_in_solution({(0, 0): [(0, 0)]}))
+        self.assertEqual(2, calculate_num_points_in_solution({(0, 0): [(0, 0), (1, 1)]}))
+
+    def test_calculate_num_points_in_solution_multiple_clusters(self):
+        self.assertEqual(3, calculate_num_points_in_solution({
+            (0, 0): [(0, 0)],
+            (1, 1): [(1, 1)],
+            (2, 2): [(2, 2)],
+        }))
+        self.assertEqual(6, calculate_num_points_in_solution({
+            (0, 0): [(0, 0)],
+            (1, 1): [(1, 1), (4, 4)],
+            (2, 2): [(3, 3), (5, 5), (7, 7)],
+        }))
+
+
 class SharedPointsTest(TestCase):
-    def test_calculate_shared_points_none(self):
+    def test_calculate_num_shared_points_none(self):
         cluster1 = [(0, 0), (1, 1)]
         cluster2 = [(2, 2), (3, 3)]
-        self.assertEqual(0, calculate_shared_points(cluster1, cluster2))
+        self.assertEqual(0, calculate_num_shared_points(cluster1, cluster2))
 
-    def test_calculate_shared_points_some(self):
+    def test_calculate_num_shared_points_some(self):
         cluster1 = [(0, 0), (1, 1)]
         cluster2 = [(2, 2), (0, 0)]
-        self.assertEqual(1, calculate_shared_points(cluster1, cluster2))
+        self.assertEqual(1, calculate_num_shared_points(cluster1, cluster2))
 
-    def test_calculate_shared_points_all(self):
+    def test_calculate_num_shared_points_all(self):
         cluster1 = [(0, 0), (1, 1)]
         cluster2 = [(1, 1), (0, 0)]
-        self.assertEqual(2, calculate_shared_points(cluster1, cluster2))
+        self.assertEqual(2, calculate_num_shared_points(cluster1, cluster2))
 
 
 class CsiTest(TestCase):

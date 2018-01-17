@@ -23,18 +23,22 @@ def calculate_mapping(points1, points2):
     return dict((p, find_nearest(p, points2)) for p in points1)
 
 
-def calculate_shared_points(points1, points2):
+def calculate_num_points_in_solution(solution):
+    """Calculates the number of data points in the given solution."""
+    return sum(len(points) for points in solution.values())
+
+
+def calculate_num_shared_points(points1, points2):
     """Returns the number of points shared by the two collections."""
     return len(set(points1).intersection(set(points2)))
 
 
 def csi(solution1, solution2):
     """Calculates the point-level centroid similarity index (CSI)."""
-    assert len(solution1) == len(solution2)
+    total_points1 = calculate_num_points_in_solution(solution1)
+    total_points2 = calculate_num_points_in_solution(solution2)
 
-    total_points1 = sum(len(x) for x in solution1.values())
-    total_points2 = sum(len(x) for x in solution2.values())
-
+    # Solutions should have the same amount of data points
     assert total_points1 == total_points2
 
     centroids1 = solution1.keys()
@@ -45,13 +49,13 @@ def csi(solution1, solution2):
     num_shared_points = 0
 
     for centroid, mapping in mapping1.items():
-        num_shared_points += calculate_shared_points(
+        num_shared_points += calculate_num_shared_points(
             solution1[centroid],
             solution2[mapping],
         )
 
     for centroid, mapping in mapping2.items():
-        num_shared_points += calculate_shared_points(
+        num_shared_points += calculate_num_shared_points(
             solution1[mapping],
             solution2[centroid],
         )
