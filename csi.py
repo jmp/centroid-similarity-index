@@ -60,4 +60,4 @@ def csi(solution1, solution2):
             solution2[centroid],
         )
 
-    return num_shared_points / (2 * total_points1)
+    return num_shared_points / (2.0 * total_points1)
