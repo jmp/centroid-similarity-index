@@ -38,9 +38,6 @@ def csi(solution1, solution2):
     total_points1 = calculate_num_points_in_solution(solution1)
     total_points2 = calculate_num_points_in_solution(solution2)
 
-    # Solutions should have the same amount of data points
-    assert total_points1 == total_points2
-
     centroids1 = solution1.keys()
     centroids2 = solution2.keys()
     mapping1 = calculate_mapping(centroids1, centroids2)
@@ -50,14 +47,14 @@ def csi(solution1, solution2):
 
     for centroid, mapping in mapping1.items():
         num_shared_points += calculate_num_shared_points(
-            solution1[centroid],
-            solution2[mapping],
+            solution1.get(centroid, []),
+            solution2.get(mapping, []),
         )
 
     for centroid, mapping in mapping2.items():
         num_shared_points += calculate_num_shared_points(
-            solution1[mapping],
-            solution2[centroid],
+            solution1.get(mapping) or [],
+            solution2.get(centroid) or [],
         )
 
-    return num_shared_points / (2.0 * total_points1)
+    return 1.0 * num_shared_points / (total_points1 + total_points2)
